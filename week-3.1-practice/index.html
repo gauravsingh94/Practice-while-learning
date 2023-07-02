@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO Website</title>
+</head>
+<body>
+    Todo Title
+    <input type="text" id="title">
+    <br><br>
+    Todo description
+    <input type="text" id="title">
+    <br><br>
+    <button onclick="onPress()">Add</button>
+</body> 
+    <script>
+        function onPress(){
+            fetch("http://localhost:3000/todos",{
+                method:"POST",
+                body:JSON.stringify({
+                    title:"gym",
+                    description:"go to gym from 6pm to 7pm"
+                }),
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            }).then((resp)=>{
+                resp.json().then((data)=>{
+                    console.log(data);
+                })
+            })
+        }
+    </script>
+</html>
