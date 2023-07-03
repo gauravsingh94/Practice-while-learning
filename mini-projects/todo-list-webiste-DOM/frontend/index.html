@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Website</title>
+</head>
+
+<body>
+    Todo title: <input type="text" id="title"><br><br>
+    Todo description: <input type="text" id="description"><br><br>
+    <button onclick="onPress()">Add Todo</button>
+    <!-- This we have to handle using the javascript -->
+    <div id="mainArea"></div>
+
+    <script>
+
+        function deleteTodo(id) {
+            fetch("http://localhost:3000/todos/" + id, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(() => {
+                console.log("Todo Successfully deleted");
+                refreshTodo();
+            }).catch((error) => {
+                console.log("Error deleting tode:", error);
+            });
+
+        }
+
+
+        function displayTodos(todos) {
+            var parentElement = document.getElementById("mainArea");
+            parentElement.innerHTML = "";
+
+            todos.forEach((todo) => {
+                var childElement = document.createElement("div");
+
+                var grandChildElement1 = document.createElement("span");
+                grandChildElement1.innerHTML = todo.title;
+
+                var grandChildElement2 = document.createElement("span");
+                grandChildElement2.innerHTML = todo.description;
+
+                var grandChildElement3 = document.createElement("button");
+                grandChildElement3.innerHTML = "Delete";
+                
+                grandChildElement3.addEventListener("click", function(){
+                    deleteTodo(todo.id);
+                });
+
+                childElement.appendChild(grandChildElement1);
+                childElement.appendChild(grandChildElement2);
+                childElement.appendChild(grandChildElement3);
+
+                parentElement.appendChild(childElement);
+
+            });
+        }
+
+        function refreshTodo() {
+            fetch("http://localhost:3000/todos")
+                .then((res) => res.json())
+                .then((data) => displayTodos(data))
+                .catch((error) => {
+                    console.log("Error fetching todo:",error);
+                });
+        }
+
+        function onPress() {
+            var title = document.getElementById('title').value;
+            var description = document.getElementById('description').value;
+
+            fetch("http://localhost:3000/todos", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description
+                })
+            }).then(() => {
+                console.log("Todo added successfully");
+                refreshTodo();
+
+            }).catch((error) => {
+                console.error("Error adding todo:", error);
+            })
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            refreshTodo();
+        });
+    </script>
+</body>
+
+</html>
