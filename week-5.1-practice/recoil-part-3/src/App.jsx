@@ -1,13 +1,10 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { useState } from "react";
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
-
-const CountContext = createContext();
+import {useRecoilValue,useSetRecoilState,RecoilRoot,atom} from "recoil";
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  const count = useRecoilValue(countState);
   return (
-    <CountContext.Provider value={{count,setCount}}>         
       <>
         <Grid
           container
@@ -18,24 +15,23 @@ function App() {
               <Box sx={{ textAlign: "center" }}>
                 <Typography variant="h4">{count}</Typography>
               </Box>
-
-              <SetupButton setCount={setCount} count={count} />
+              <SetupButton />
             </Card>
           </Grid>
         </Grid>
       </>
-    </CountContext.Provider>
   );
 }
 
 function SetupButton() {
-  const {count,setCount} = useContext(CountContext);
+
+  const setCount = useSetRecoilState(countState); 
   return (
     <>
       <Button
         variant="outlined"
         sx={{ margin: "10px" }}
-        onClick={() => setCount(count - 1)}
+        onClick={() => setCount(count=>count-1)}
       >
         Decrease
       </Button>
@@ -43,12 +39,22 @@ function SetupButton() {
       <Button
         variant="outlined"
         sx={{ margin: "10px" }}
-        onClick={() => setCount(count + 1)}
+        onClick={() => setCount(count=>count + 1)}
       >
         Increase
       </Button>
     </>
   );
 }
+// How to add the state in recoil
+// const textState = atom({
+//   key:'textState', //unique id
+//   default:''.
+// })
+
+const countState = atom({
+  key:'countState',
+  default:0,
+});
 
 export default App;
