@@ -10,20 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient({ log: ['info', 'query'] });
+const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        // ... you will write your Prisma Client queries here
-        yield prisma.post.create({
+        yield prisma.user.update({
+            where: {
+                id: 1
+            },
             data: {
-                title: "Learning Prisma",
-                content: "Have to give GSOC 24",
-                published: true,
-                author: {
-                    connect: {
-                        id: 1
-                    }
-                }
+                name: "random2@123"
             }
         });
     });
